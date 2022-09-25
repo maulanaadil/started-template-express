@@ -3,7 +3,7 @@ import httpCodes from "@/helpers/httpCodes";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { zParse } from "@/middlewares/validateResource";
-import { CreatePostSchema } from "../schema/posts.schema";
+import { CreatePostSchema, UpdatePostSchema } from "../schema/posts.schema";
 
 const prisma = new PrismaClient();
 
@@ -60,9 +60,60 @@ const createPost = async (req: Request, res: Response) => {
   }
 };
 
-const updatePost = async (req: Request, res: Response) => {};
+const updatePost = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const imageUrl = req.file?.filename;
+    const { title, published } = req.body;
 
-const deletePost = async (req: Request, res: Response) => {};
+    const selectedPost = await prisma.post.findFirst({
+      where: { id: parseInt(id) },
+    });
+
+    if (!selectedPost) {
+      return response(res, httpCodes.NotFound, "Post not found!", null);
+    }
+
+    await zParse(UpdatePostSchema, req);
+    const updatePost = await prisma.post.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        title: title || undefined,
+        imageUrl: imageUrl || undefined,
+        published: published === "true" ? true : false,
+      },
+    });
+    return response(res, httpCodes.Ok, "Update post success!", updatePost);
+  } catch (error: any) {
+    return response(res, httpCodes.InternalServerError, error.message, null);
+  }
+};
+
+const deletePost = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const selectedPost = await prisma.post.findFirst({
+      where: { id: parseInt(id) },
+    });
+
+    if (!selectedPost) {
+      return response(res, httpCodes.NotFound, "Post not found!", null);
+    }
+
+    await prisma.post.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return response(res, httpCodes.Ok, "Delete post success!", null);
+  } catch (error: any) {
+    return response(res, httpCodes.InternalServerError, error.message, null);
+  }
+};
 
 export default {
   getPosts,
