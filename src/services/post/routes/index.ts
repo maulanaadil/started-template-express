@@ -1,5 +1,6 @@
 import { Router } from "express";
 import post from "../controllers/PostController";
+import uploadImage from "@/middlewares/validateUploadImage";
 
 const router: Router = Router();
 
@@ -10,7 +11,7 @@ router.get("/", post.getPosts);
 router.get("/:id", post.getPostById);
 
 // create posts
-router.post("/", post.createPost);
+router.post("/", uploadImage.single("image"), post.createPost);
 
 // update post
 router.patch("/:id", post.updatePost);

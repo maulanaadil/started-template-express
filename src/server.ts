@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import 'module-alias/register';
+import "module-alias/register";
 import router from "./routes";
 
 dotenv.config();
@@ -12,6 +12,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use("/images", express.static("images"));
 app.use(router);
 
 app.get("/", (req: Request, res: Response) => {
