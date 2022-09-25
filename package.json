@@ -11,7 +11,6 @@
     "start": "node dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon ./src/server.ts\"",
     "seed": "ts-node prisma/seed.ts",
-    "lint": "eslint --ignore-path .gitignore . --ext js --ext jsx",
     "lint-fix": "eslint \"**/*.{js,jsx}\" --fix",
     "precommit": "lint-staged",
     "prepare": "husky install"
