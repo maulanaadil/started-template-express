@@ -16,3 +16,17 @@ export const CreatePostSchema = object({
     }),
   }),
 });
+
+export const UpdatePostSchema = object({
+  file: object({
+    filename: string(),
+  }),
+  body: object({
+    title: string({
+      required_error: "title is required!",
+    }).min(8),
+    published: string({
+      required_error: "published is required!",
+    }),
+  }),
+});

@@ -14,7 +14,7 @@ router.get("/:id", post.getPostById);
 router.post("/", uploadImage.single("image"), post.createPost);
 
 // update post
-router.patch("/:id", post.updatePost);
+router.patch("/:id", uploadImage.single("image"), post.updatePost);
 
 // delete post
 router.delete("/:id", post.deletePost);
