@@ -12,7 +12,7 @@ async function seed() {
     },
   });
 
-  console.log(`${user} has been created 🙌`);
+  console.log(`data has been created 🙌`);
 }
 
 seed()

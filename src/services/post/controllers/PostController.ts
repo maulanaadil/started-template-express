@@ -2,6 +2,8 @@ import response from "@/helpers/response";
 import httpCodes from "@/helpers/httpCodes";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { zParse } from "@/middlewares/validateResource";
+import { CreatePostSchema } from "../schema/posts.schema";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +15,7 @@ const getPosts = async (req: Request, res: Response) => {
       },
     });
 
-    return response(res, httpCodes.Ok, "Get all games success!", posts);
+    return response(res, httpCodes.Ok, "Get all posts success!", posts);
   } catch (error: any) {
     return response(res, httpCodes.InternalServerError, error.message, null);
   }
@@ -39,7 +41,23 @@ const getPostById = async (req: Request, res: Response) => {
 
 const createPost = async (req: Request, res: Response) => {
   try {
-  } catch (error: any) {}
+    const imageUrl = req.file?.filename;
+    const { title, published, authorId } = req.body;
+    await zParse(CreatePostSchema, req);
+
+    const post = await prisma.post.create({
+      data: {
+        authorId: parseInt(authorId),
+        title,
+        imageUrl,
+        published: published === "true" ? true : false,
+      },
+    });
+
+    return response(res, httpCodes.Created, "Create post success!", post);
+  } catch (error: any) {
+    return response(res, httpCodes.InternalServerError, error.message, null);
+  }
 };
 
 const updatePost = async (req: Request, res: Response) => {};
