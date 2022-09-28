@@ -42,13 +42,14 @@ const getPostById = async (req: Request, res: Response) => {
 const createPost = async (req: Request, res: Response) => {
   try {
     const imageUrl = req.file?.filename;
-    const { title, published, authorId } = req.body;
+    const { title, published, authorId, description } = req.body;
     await zParse(CreatePostSchema, req);
 
     const post = await prisma.post.create({
       data: {
         authorId: parseInt(authorId),
         title,
+        description,
         imageUrl,
         published: published === "true" ? true : false,
       },
@@ -64,7 +65,7 @@ const updatePost = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const imageUrl = req.file?.filename;
-    const { title, published } = req.body;
+    const { title, description, published } = req.body;
 
     const selectedPost = await prisma.post.findFirst({
       where: { id: parseInt(id) },
@@ -81,6 +82,7 @@ const updatePost = async (req: Request, res: Response) => {
       },
       data: {
         title: title || undefined,
+        description: description || undefined,
         imageUrl: imageUrl || undefined,
         published: published === "true" ? true : false,
       },
