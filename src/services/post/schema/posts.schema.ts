@@ -11,6 +11,9 @@ export const CreatePostSchema = object({
     title: string({
       required_error: "title is required!",
     }).min(8),
+    description: string({
+      required_error: "description is required!",
+    }),
     published: string({
       required_error: "published is required!",
     }),
@@ -25,6 +28,9 @@ export const UpdatePostSchema = object({
     title: string({
       required_error: "title is required!",
     }).min(8),
+    description: string({
+      required_error: "description is required!",
+    }).min(10),
     published: string({
       required_error: "published is required!",
     }),
